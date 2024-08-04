@@ -1,13 +1,15 @@
 
-import { Schema,models,model } from 'mongoose'
+import pkg from 'mongoose';
+const { Schema, model, models } = pkg;
 
-const taskModel =  new Schema({
+const TaskModel =  new Schema({
     title:String,
     date:String,
     description:String,
-    taskId:Date.now().toString()
+    priority:String,
+    taskID:String
 })
 
-const Task  =  models.Task || model('my-tasks', taskModel);
+const Task  =  models.Task || model('my-tasks', TaskModel);
 
-export default Task;
+export default Task

@@ -34,7 +34,7 @@ const CloseIcon = () => (
   </svg>
 );
 export const Header = ({ collapsed, toggleSidebar, showUserIcon }) => (
-  <header className=" shadow-md p-4 flex justify-between items-center">
+  <header className=" shadow-md p-4 flex justify-between items-center ">
     <button
       onClick={toggleSidebar}
       className="text-gray-500 hover:text-gray-700 focus:outline-none"

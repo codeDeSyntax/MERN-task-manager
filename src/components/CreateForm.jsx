@@ -1,9 +1,13 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { Popover } from "antd";
-
 import axios from "axios";
+import { GlobState } from "./GlobalState";
+import PropTypes from "prop-types";
+// import { GetUpdatedTasks } from "./GetUpdatedTasks";
 
-const NewTask = () => {
+axios.defaults.baseURL = "http://localhost:5000";
+
+const NewTask = ({ setLoading }) => {
   const [formOpen, setFormOpen] = useState(false);
   const [formData, setFormData] = useState({
     title: "",
@@ -12,7 +16,7 @@ const NewTask = () => {
     priority: "low",
     taskID: Date.now().toString(),
   });
-
+  const { setTasks } = useContext(GlobState);
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prevState) => ({
@@ -24,9 +28,13 @@ const NewTask = () => {
   const createTask = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post("/api/new", formData);
+    //   window.location.reload();
+      setLoading(true);
+      const res = await axios.post("/api/tasks/new", formData);
+      setTasks((prevState) => [...prevState, res.data]);
       console.log(res.data);
       setFormOpen(false);
+      setLoading(false);
     } catch (error) {
       console.error("Error creating task:", error);
     }
@@ -155,6 +163,10 @@ const NewTask = () => {
       </button>
     </Popover>
   );
+};
+
+NewTask.propTypes = {
+  setLoading: PropTypes.func.isRequired,
 };
 
 export default NewTask;

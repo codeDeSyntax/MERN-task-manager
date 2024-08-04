@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 export const Sidebar = ({ collapsed, menuItems, onSignOut }) => {
   return (
     <div
-      className={` text-white  h-screen shadow-md shadow-primary flex flex-col items-center ${
+      className={` text-white  h-screen shadow-md shadow-primary flex flex-col items-center  z-20 bg-background ${
         collapsed ? "w-16" : "w-64"
       } transition-all duration-300 ease-in-out`}
     >

@@ -1,10 +1,12 @@
 import PropTypes from "prop-types";
 import { useState } from "react";
+import { EditForm } from "./EditForm";
+import axios from "axios";
 
 const EditIcon = () => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
-    className="h-5 w-5 text-primary hover hover:text-secondary"
+    className="h-5 w-5 text-primary hover:text-secondary"
     viewBox="0 0 20 20"
     fill="currentColor"
   >
@@ -15,7 +17,7 @@ const EditIcon = () => (
 const DeleteIcon = () => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
-    className="h-5 w-5  text-primary hover hover:text-secondary"
+    className="h-5 w-5 text-primary hover:text-secondary"
     viewBox="0 0 20 20"
     fill="currentColor"
   >
@@ -30,7 +32,7 @@ const DeleteIcon = () => (
 const MoreIcon = () => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
-    className="h-5 w-5 text-primary hover hover:text-secondary"
+    className="h-5 w-5 text-primary hover:text-secondary"
     viewBox="0 0 20 20"
     fill="currentColor"
   >
@@ -40,30 +42,46 @@ const MoreIcon = () => (
 
 export const TaskCard = ({ task }) => {
   const [showDropdown, setShowDropdown] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
+  
+  const deleteTask = async (e) => {
+    e.preventDefault();
+    try {
+        console.log(`Deleting task with ID: ${task._id}`);
+        const response = await axios.delete(`/api/tasks/delete/${task._id}`);
+        console.log(response.data);
+        window.location.reload();
+    } catch (error) {
+        console.error("Error deleting task", error);
+        console.error("Error response:", error.response);
+    }
+  }
 
   return (
-    <div className=" rounded-lg bg-secondary shadow-secondary p-4 mb-4">
-      <h3 className="text-lg font-semibold mb-2 text-accent">{task.title}</h3>
-      <p className="text-sm text-text mb-4">{task.description}</p>
-      <div className="flex justify-between items-center">
-        <span
-          className={`px-2 py-1 rounded-full text-xs ${
-            task.priority === "high"
-              ? "bg-red-500 text-white"
-              : task.priority === "medium"
-              ? "bg-yellow-500 text-black"
-              : "bg-green-500 text-white"
-          }`}
-        >
-          {task.priority}
-        </span>
-        <span className="text-text text-xs">{task.date}</span>
+    <div className="relative rounded-lg  bg-[#f9f8f1] shadow border shadow-secondar p-4 mb-4 flex flex-col" style={{ minHeight: "150px" }}>
+      <div className="flex-grow">
+        <h3 className="text-lg font-semibold mb-2 text-background">{task.title}</h3>
+        <p className="text-sm text-background mb-4">{task.description}</p>
+        <div className="flex justify-between items-center">
+          <span
+            className={`px-2 py-1 rounded-full text-xs ${
+              task.priority === "high"
+                ? "bg-red-500 text-white"
+                : task.priority === "medium"
+                ? "bg-yellow-500 text-black"
+                : "bg-green-500 text-white"
+            }`}
+          >
+            {task.priority}
+          </span>
+          <span className="text-[gray] text-xs">{task.date}</span>
+        </div>
       </div>
-      <div className="mt-4 flex justify-end space-x-2">
-        <button className="p-2 hover:bg-text rounded-full">
+      <div className="mt-4 flex justify-between items-center">
+        <button className="p-2 hover:bg-text rounded-full" onClick={() => setIsEditing(true)}>
           <EditIcon />
         </button>
-        <button className="p-2 hover:bg-text rounded-full">
+        <button className="p-2 hover:bg-text rounded-full" onClick={deleteTask}>
           <DeleteIcon />
         </button>
         <div className="relative">
@@ -88,13 +106,16 @@ export const TaskCard = ({ task }) => {
           )}
         </div>
       </div>
+      {isEditing && (
+       <EditForm task={task} setIsEditing={setIsEditing}/>
+      )}
     </div>
   );
 };
 
 TaskCard.propTypes = {
   task: PropTypes.shape({
-    id: PropTypes.number.isRequired,
+    _id: PropTypes.string.isRequired,
     title: PropTypes.string.isRequired,
     description: PropTypes.string.isRequired,
     date: PropTypes.string.isRequired,

@@ -1,18 +1,16 @@
 import mongoose from 'mongoose';
-import { process } from 'node';
+// import  process  from 'process';
 
-const MONGODB_URI =process.env.mongoUrl
+const MONGODB_URI = 'mongodb+srv://new-user-49:new-user-49@cluster0.qzrap9v.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0'
 
 if (!MONGODB_URI) {
   throw new Error('MONGODB_URI environment variable is not defined');
 }
 
-let connection = null;
+let connection;
 
 async function connectToDatabase() {
-  if (connection) {
-    return connection;
-  }
+
 
   try {
     const mongooseInstance = await mongoose.connect(MONGODB_URI, {
@@ -31,13 +29,6 @@ async function connectToDatabase() {
       console.warn('MongoDB disconnected');
     });
     
-    process.on('SIGINT', async () => {
-      if (connection) {
-        await connection.close();
-        console.log('MongoDB connection closed due to application termination');
-        process.exit(0);
-      }
-    });
 
     return connection;
   } catch (error) {

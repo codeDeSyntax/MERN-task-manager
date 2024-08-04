@@ -1,12 +1,19 @@
 import PropTypes from "prop-types";
 import { createContext } from "react";
+import { useState } from "react";
 
 export const GlobState = createContext();
 
 const StateProvider = ({ children }) => {
-  // Add prop validation for 'children'
+  const [tasks, setTasks] = useState([
 
-  return <GlobState.Provider value={{}}>{children}</GlobState.Provider>;
+  ]);
+
+  return (
+    <GlobState.Provider value={{ tasks, setTasks }}>
+      {children}
+    </GlobState.Provider>
+  );
 };
 
 StateProvider.propTypes = {
