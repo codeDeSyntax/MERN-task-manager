@@ -1,7 +1,10 @@
 import mongoose from 'mongoose';
-// import  process  from 'process';
+import  process  from 'process';
+import { createRequire } from 'module';
+const require = createRequire(import.meta.url);
+require('dotenv').config();
 
-const MONGODB_URI = 'mongodb+srv://new-user-49:new-user-49@cluster0.qzrap9v.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0'
+const MONGODB_URI = process.env.MONGODB_URI;
 
 if (!MONGODB_URI) {
   throw new Error('MONGODB_URI environment variable is not defined');
